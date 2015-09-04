@@ -9,6 +9,7 @@ Features (planned):
 * save/load game
 * static enemies
 * deterministic battle system with A/D/H
+* bumping into things
 * permadeath
 * melee fights
 * range fights
