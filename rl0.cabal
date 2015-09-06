@@ -13,7 +13,7 @@ Executable rl0
     Main-Is: Main.hs
     GHC-Options: -Wall -Werror
     HS-Source-Dirs: src
-    Build-Depends: base
+    Build-Depends: base, hscurses >= 1.4
 
 Source-Repository head
     Type: git

@@ -1,3 +1,4 @@
 dist/
 target/
-/project.cabal
+.cabal-sandbox
+cabal.sandbox.config
