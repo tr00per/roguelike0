@@ -1,15 +1,36 @@
 module Game
-    ( gameLoop
-    , initGameLoop
+    ( initGameLoop
+    , runGameLoop
     ) where
 
 import           Actions
 import           Board
+import           Control.Monad.State
 
-initGameLoop :: Board
-initGameLoop = [[Blank, Wall, Floor, Player, Wall]]
+type GameLoop = Action -> State GameState RoundResult
 
-gameLoop :: Action -> Board
-gameLoop (Go West) = [[Blank, Wall, Player, Floor, Wall]]
-gameLoop (Go East) = [[Blank, Wall, Floor, Player, Wall]]
-gameLoop _ = []
+newPlayerHealth :: Int
+newPlayerHealth = 10
+
+newPlayer :: String -> Player
+newPlayer playerName = Player playerName newPlayerHealth
+
+initGameLoop :: String -> GameState
+initGameLoop playerName = GameState [[Blank, Wall, Floor, Hero, Wall]] (newPlayer playerName)
+
+runGameLoop :: Action -> GameState -> (RoundResult, GameState)
+runGameLoop action = runState (gameLoop action)
+
+gameLoop :: GameLoop
+gameLoop (Go West) = do
+    modify $ \st ->
+        st { board = [[Blank, Wall, Hero, Floor, Wall]] }
+    return Continue
+gameLoop (Go East) = do
+    modify $ \st ->
+        st { board = [[Blank, Wall, Floor, Hero, Wall]] }
+    return Continue
+gameLoop (Meta Quit) =
+    return GameOver
+gameLoop _ =
+    return Continue

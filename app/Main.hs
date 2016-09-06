@@ -1,26 +1,30 @@
 module Main where
 
-import           Control.Exception
-import           Game                     (gameLoop, initGameLoop)
+import           Board                    (GameState, RoundResult (..))
+import           Control.Exception        (finally)
+import           Game                     (initGameLoop, runGameLoop)
 import           Keymap                   (kmap)
 import           Render                   (render)
 import qualified UI.HSCurses.Curses       as Curses
 import qualified UI.HSCurses.CursesHelper as CursesH
 
 main :: IO ()
-main = runInTerminal cursesLoop
+main = runInTerminal
 
-runInTerminal :: (String -> IO ()) -> IO ()
-runInTerminal run = do
+runInTerminal :: IO ()
+runInTerminal = do
     CursesH.start
     _ <- Curses.cursSet Curses.CursorInvisible
-    run (render initGameLoop) `finally` CursesH.end
+    run (initGameLoop "Fenter") `finally` CursesH.end
+    where
+        run :: GameState -> IO ()
+        run gameState = do
+            Curses.wclear Curses.stdScr
+            Curses.wAddStr Curses.stdScr (render gameState)
+            Curses.refresh
+            key <- Curses.getCh
+            next $ runGameLoop (kmap key) gameState
 
-cursesLoop :: String -> IO ()
-cursesLoop initialState = do
-    Curses.wclear Curses.stdScr
-    Curses.wAddStr Curses.stdScr initialState
-    Curses.refresh
-    key <- Curses.getCh
-    let newScreen = render $ gameLoop $ kmap key
-    cursesLoop newScreen
+        next :: (RoundResult, GameState) -> IO ()
+        next (GameOver, _) = return ()
+        next (Continue, gs) = run gs

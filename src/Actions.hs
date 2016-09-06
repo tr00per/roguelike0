@@ -1,8 +1,4 @@
-module Actions
-    ( Action (..)
-    , Direction (..)
-    , Control (..)
-    ) where
+module Actions where
 
 data Action = Meta Control
             | Go Direction

@@ -3,14 +3,12 @@ module Render
     ) where
 
 import           Board
--- import qualified UI.HSCurses.Curses       as Curses
--- import qualified UI.HSCurses.CursesHelper as CursesH
 
-render :: Board -> String
-render = concatMap (map renderPiece)
+render :: GameState -> String
+render = unlines . map (map renderPiece) . board
 
 renderPiece :: Piece -> Char
 renderPiece Blank = ' '
 renderPiece Wall = '#'
 renderPiece Floor = '.'
-renderPiece Player = '@'
+renderPiece Hero = '@'
