@@ -2,13 +2,13 @@ module Keymap
     ( kmap
     ) where
 
-import           Actions            (Action (..), Control (..), Direction (..))
-import           UI.HSCurses.Curses (Key (..))
+import           Actions    (Action (..), Control (..), Direction (..))
+import           UI.NCurses (Event (..), Key (..))
 
-kmap :: Key -> Action
-kmap (KeyChar 'Q') = Meta Quit
-kmap KeyUp = Go North
-kmap KeyRight = Go East
-kmap KeyDown = Go South
-kmap KeyLeft = Go West
+kmap :: Event -> Action
+kmap (EventCharacter 'Q') = Meta Quit
+kmap (EventSpecialKey KeyUpArrow) = Go North
+kmap (EventSpecialKey KeyRightArrow) = Go East
+kmap (EventSpecialKey KeyDownArrow) = Go South
+kmap (EventSpecialKey KeyLeftArrow) = Go West
 kmap _ = Meta NoAction

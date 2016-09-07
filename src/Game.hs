@@ -7,6 +7,7 @@ import           Actions
 import           Board
 import           Control.Monad.State
 
+type GameLoopRunner = Action -> GameState -> (RoundResult, GameState)
 type GameLoop = Action -> State GameState RoundResult
 
 newPlayerHealth :: Int
@@ -18,7 +19,7 @@ newPlayer playerName = Player playerName newPlayerHealth
 initGameLoop :: String -> GameState
 initGameLoop playerName = GameState [[Blank, Wall, Floor, Hero, Wall]] (newPlayer playerName)
 
-runGameLoop :: Action -> GameState -> (RoundResult, GameState)
+runGameLoop :: GameLoopRunner
 runGameLoop action = runState (gameLoop action)
 
 gameLoop :: GameLoop

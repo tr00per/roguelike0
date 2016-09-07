@@ -16,7 +16,7 @@ library
   exposed-modules:     Game, Keymap, Render, Actions, Board
   build-depends:       base >= 4.7 && < 5
                      , mtl
-                     , hscurses
+                     , ncurses
   ghc-options:         -Wall -Werror
   default-language:    Haskell2010
 
@@ -25,7 +25,7 @@ executable roguelike0-exe
   main-is:             Main.hs
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N -Wall -Werror
   build-depends:       base
-                     , hscurses
+                     , ncurses
                      , roguelike0
   default-language:    Haskell2010
 

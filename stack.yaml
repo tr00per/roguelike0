@@ -2,6 +2,6 @@ resolver: lts-6.15
 packages:
 - '.'
 extra-deps:
-- hscurses-1.4.2.0
+- ncurses-0.2.16
 flags: {}
 extra-package-dbs: []
