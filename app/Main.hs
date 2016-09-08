@@ -3,7 +3,7 @@ module Main where
 import           Board      (GameState, RoundResult (..))
 import           Game       (initGameLoop, runGameLoop)
 import           Keymap     (kmap)
-import           Render     (render)
+import           Render     (Palette, initPalette, render)
 import qualified UI.NCurses as Curses
 
 main :: IO ()
@@ -12,23 +12,24 @@ main = runInTerminal
 runInTerminal :: IO ()
 runInTerminal = Curses.runCurses $ do
     _ <- Curses.setCursorMode Curses.CursorInvisible
-    run $ initGameLoop "Fenter"
+    palette <- initPalette
+    run palette $ initGameLoop "Fenter"
 
     where
-        run :: GameState -> Curses.Curses ()
-        run gameState = do
+        run :: Palette -> GameState -> Curses.Curses ()
+        run palette gameState = do
             w <- Curses.defaultWindow
             Curses.updateWindow w $ do
                 Curses.clear
-                Curses.drawString (render gameState)
+                render palette gameState
             Curses.render
             (Just ev) <- Curses.getEvent w Nothing
-            next ev gameState $ runGameLoop (kmap ev) gameState
+            next ev palette gameState $ runGameLoop (kmap ev) gameState
 
-        next :: Curses.Event -> GameState -> (RoundResult, GameState) -> Curses.Curses ()
-        next Curses.EventResized oldState _ =
-            run oldState
-        next _ _ (GameOver, _) =
+        next :: Curses.Event -> Palette -> GameState -> (RoundResult, GameState) -> Curses.Curses ()
+        next Curses.EventResized palette oldState _ =
+            run palette oldState
+        next _ _ _ (GameOver, _) =
             return ()
-        next _ _ (Continue, gs) =
-            run gs
+        next _ palette _ (Continue, gs) =
+            run palette gs
