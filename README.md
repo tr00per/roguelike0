@@ -1,7 +1,7 @@
 Roguelike0 - My attempt at the roguelike genre
 ---
 Features (planned):
-- [ ] integration with ncurses
+- [x] integration with ncurses
 - [ ] moving around
 - [ ] generated dungeon
 - [ ] moving around withing the dungeon
