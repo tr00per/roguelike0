@@ -25,6 +25,7 @@ executable roguelike0-exe
   other-modules:       Keymap, Render
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N -Wall -Werror
   build-depends:       base
+                     , extensible-effects
                      , ncurses
                      , roguelike0
   default-language:    Haskell2010

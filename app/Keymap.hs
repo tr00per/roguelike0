@@ -1,8 +1,11 @@
 module Keymap
     ( kmap
+
+    -- re-export from Actions
+    , Action
     ) where
 
-import           Actions    (Action (..), Control (..), Direction (..))
+import           Actions
 import           UI.NCurses (Event (..), Key (..))
 
 kmap :: Event -> Action

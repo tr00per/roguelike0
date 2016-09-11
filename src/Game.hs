@@ -1,6 +1,10 @@
 module Game
     ( initGameLoop
     , runGameLoop
+
+    -- re-export from Board
+    , GameState
+    , RoundResult (..)
     ) where
 
 import           Actions
