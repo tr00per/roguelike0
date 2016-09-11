@@ -15,7 +15,7 @@ library
   hs-source-dirs:      src
   exposed-modules:     Actions, Board, Game
   build-depends:       base >= 4.7 && < 5
-                     , mtl
+                     , extensible-effects
   ghc-options:         -Wall -Werror
   default-language:    Haskell2010
 

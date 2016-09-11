@@ -1,5 +1,5 @@
-{-# LANGUAGE FlexibleContexts    #-}
-{-# LANGUAGE TypeFamilies        #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE TypeFamilies #-}
 module Main where
 
 import           Control.Eff
@@ -7,7 +7,7 @@ import           Control.Eff.Lift
 import           Control.Eff.Reader.Lazy
 import           Control.Eff.State.Lazy
 import           Game                    (GameState, RoundResult (..),
-                                          initGameLoop, runGameLoop)
+                                          gameLoop, initGameLoop)
 import           Keymap                  (kmap)
 import           Render                  (Palette, initPalette, render)
 import qualified UI.NCurses              as Curses
@@ -49,15 +49,14 @@ runGame = do
         render palette gameState
     lift Curses.render
     (Just ev) <- lift $ Curses.getEvent w Nothing
-    next ev runGameLoop
+    next ev gameLoop
     where
         next Curses.EventResized _ =
             runGame
         next ev step = do
-            gameState <- get
-            case step (kmap ev) gameState of
-                (GameOver, _) ->
+            roundResult <- step (kmap ev)
+            case roundResult of
+                GameOver ->
                     return GameOver
-                (Continue, newState) -> do
-                    put newState
+                Continue ->
                     runGame
