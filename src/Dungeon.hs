@@ -12,25 +12,29 @@ dungeonGenerator heroPos = matrix maxDungeonHeight maxDungeonWidth filler
                         else Floor
 
 isWithinMap :: Board -> Coords -> Bool
-isWithinMap currentBoard (Coords x y) = x >= 1 && x <= ncols currentBoard && y >= 1 && y <= ncols currentBoard
+isWithinMap currentBoard (Coords x y) = x >= 1 && x <= ncols currentBoard && y >= 1 && y <= nrows currentBoard
 
-moveUp, moveDown, moveLeft, moveRight :: Coords -> Board -> Board
+moveUp, moveDown, moveLeft, moveRight :: Coords -> Board -> (Coords, Board)
 moveUp coords b = let x = getX coords
                       y = getY coords
                       srcValue = unsafeGet y x b
-                  in unsafeSet srcValue (y - 1, x) $ unsafeSet Floor (y, x) b
+                      newPos = (y - 1, x)
+                  in (fromYXPair newPos, unsafeSet srcValue newPos $ unsafeSet Floor (y, x) b)
 moveDown coords b = let x = getX coords
                         y = getY coords
                         srcValue = unsafeGet y x b
-                    in unsafeSet srcValue (y + 1, x) $ unsafeSet Floor (y, x) b
+                        newPos = (y + 1, x)
+                    in (fromYXPair newPos, unsafeSet srcValue newPos $ unsafeSet Floor (y, x) b)
 moveLeft coords b = let x = getX coords
                         y = getY coords
                         srcValue = unsafeGet y x b
-                    in unsafeSet srcValue (y, x - 1) $ unsafeSet Floor (y, x) b
+                        newPos = (y, x - 1)
+                    in (fromYXPair newPos, unsafeSet srcValue newPos $ unsafeSet Floor (y, x) b)
 moveRight coords b = let x = getX coords
                          y = getY coords
                          srcValue = unsafeGet y x b
-                     in unsafeSet srcValue (y, x + 1) $ unsafeSet Floor (y, x) b
+                         newPos = (y, x + 1)
+                     in (fromYXPair newPos, unsafeSet srcValue newPos $ unsafeSet Floor (y, x) b)
 
 canPlayerMoveUp, canPlayerMoveDown, canPlayerMoveLeft, canPlayerMoveRight :: Board -> Player -> Bool
 canPlayerMoveUp b p = let playerPos = position p in

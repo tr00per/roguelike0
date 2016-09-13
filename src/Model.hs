@@ -2,14 +2,15 @@ module Model where
 
 import           Data.Matrix (Matrix (..), toLists)
 
+type SingleCoord = Int
 data Coords = Coords
-            { getX :: Int
-            , getY :: Int
+            { getX :: SingleCoord
+            , getY :: SingleCoord
             } deriving (Eq, Show)
 
-maxDungeonWidth, maxDungeonHeight :: Int
+maxDungeonWidth, maxDungeonHeight :: SingleCoord
 maxDungeonWidth = 79
-maxDungeonHeight = 21
+maxDungeonHeight = 25
 
 type Board = Matrix Piece
 type RenderBoard = [[Piece]]
@@ -36,3 +37,6 @@ data Player = Player
 
 forRendering :: Board -> RenderBoard
 forRendering = toLists
+
+fromYXPair :: (SingleCoord, SingleCoord) -> Coords
+fromYXPair (y, x) = Coords x y
