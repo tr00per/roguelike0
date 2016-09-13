@@ -3,6 +3,7 @@ module Dungeon where
 import           Data.Matrix
 import           Model
 
+type CoordsTransform = Coords -> Coords
 
 dungeonGenerator :: Coords -> Board
 dungeonGenerator heroPos = matrix maxDungeonHeight maxDungeonWidth filler
@@ -14,40 +15,23 @@ dungeonGenerator heroPos = matrix maxDungeonHeight maxDungeonWidth filler
 isWithinMap :: Board -> Coords -> Bool
 isWithinMap currentBoard (Coords x y) = x >= 1 && x <= ncols currentBoard && y >= 1 && y <= nrows currentBoard
 
-moveUp, moveDown, moveLeft, moveRight :: Coords -> Board -> (Coords, Board)
-moveUp coords b = let x = getX coords
-                      y = getY coords
-                      srcValue = unsafeGet y x b
-                      newPos = (y - 1, x)
-                  in (fromYXPair newPos, unsafeSet srcValue newPos $ unsafeSet Floor (y, x) b)
-moveDown coords b = let x = getX coords
-                        y = getY coords
-                        srcValue = unsafeGet y x b
-                        newPos = (y + 1, x)
-                    in (fromYXPair newPos, unsafeSet srcValue newPos $ unsafeSet Floor (y, x) b)
-moveLeft coords b = let x = getX coords
-                        y = getY coords
-                        srcValue = unsafeGet y x b
-                        newPos = (y, x - 1)
-                    in (fromYXPair newPos, unsafeSet srcValue newPos $ unsafeSet Floor (y, x) b)
-moveRight coords b = let x = getX coords
-                         y = getY coords
-                         srcValue = unsafeGet y x b
-                         newPos = (y, x + 1)
-                     in (fromYXPair newPos, unsafeSet srcValue newPos $ unsafeSet Floor (y, x) b)
+move :: CoordsTransform -> Coords -> Board -> (Coords, Board)
+move trans coords b = let yxPair = toYXPair coords
+                          srcValue = uncurry unsafeGet yxPair b
+                          newPos = trans coords
+                      in (newPos, unsafeSet srcValue (toYXPair newPos) $ unsafeSet Floor yxPair b)
 
-canPlayerMoveUp, canPlayerMoveDown, canPlayerMoveLeft, canPlayerMoveRight :: Board -> Player -> Bool
-canPlayerMoveUp b p = let playerPos = position p in
-                   canMoveFromTo b playerPos playerPos { getY = getY playerPos - 1 }
 
-canPlayerMoveDown b p = let playerPos = position p in
-                     canMoveFromTo b playerPos playerPos { getY = getY playerPos + 1 }
 
-canPlayerMoveLeft b p = let playerPos = position p in
-                     canMoveFromTo b playerPos playerPos { getX = getX playerPos - 1 }
+north, south, west, east :: CoordsTransform
+north coords = coords { getY = getY coords - 1 }
+south coords = coords { getY = getY coords + 1 }
+west coords = coords { getX = getX coords - 1 }
+east coords = coords { getX = getX coords + 1 }
 
-canPlayerMoveRight b p = let playerPos = position p in
-                      canMoveFromTo b playerPos playerPos { getX = getX playerPos + 1 }
+canPlayerMove :: CoordsTransform ->  Board -> Player -> Bool
+canPlayerMove trans b p = let playerPos = position p in
+                          canMoveFromTo b playerPos (trans playerPos)
 
 canMoveFromTo :: Board -> Coords -> Coords -> Bool
 canMoveFromTo b _ to = isWithinMap b to

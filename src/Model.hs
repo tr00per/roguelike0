@@ -3,6 +3,7 @@ module Model where
 import           Data.Matrix (Matrix (..), toLists)
 
 type SingleCoord = Int
+type YXPair = (SingleCoord, SingleCoord)
 data Coords = Coords
             { getX :: SingleCoord
             , getY :: SingleCoord
@@ -38,5 +39,5 @@ data Player = Player
 forRendering :: Board -> RenderBoard
 forRendering = toLists
 
-fromYXPair :: (SingleCoord, SingleCoord) -> Coords
-fromYXPair (y, x) = Coords x y
+toYXPair :: Coords -> YXPair
+toYXPair (Coords x y) = (y, x)

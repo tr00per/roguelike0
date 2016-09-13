@@ -4,8 +4,8 @@ module Render
     , Palette
     ) where
 
-import           Model
 import           Data.List  (intercalate)
+import           Model
 import           UI.NCurses (Attribute (..), Color (..), ColorID, Curses,
                              Glyph (..), Update, drawGlyph, newColorID)
 

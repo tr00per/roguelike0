@@ -28,38 +28,19 @@ initGameLoop playerName =
     GameState (dungeonGenerator playerCoords) (newPlayer playerName playerCoords)
 
 gameLoop :: Member (State GameState) e => Action -> Eff e RoundResult
-gameLoop (Go North) = do
+gameLoop (Go dir) = do
     gs <- get
-    let thePlayer = player gs
+    let direction = actionToDirection dir
+        thePlayer = player gs
         theBoard = board gs
-    when (canPlayerMoveUp theBoard thePlayer) $ modify $ \st ->
-        let (newPos, newBoard) = moveUp (position thePlayer) theBoard
+    when (canPlayerMove direction theBoard thePlayer) $ modify $ \st ->
+        let (newPos, newBoard) = move direction (position thePlayer) theBoard
         in st { board = newBoard, player = thePlayer {position = newPos}}
     return Continue
-gameLoop (Go South) = do
-    gs <- get
-    let thePlayer = player gs
-        theBoard = board gs
-    when (canPlayerMoveDown theBoard thePlayer) $ modify $ \st ->
-        let (newPos, newBoard) = moveDown (position thePlayer) theBoard
-        in st { board = newBoard, player = thePlayer {position = newPos}}
-    return Continue
-gameLoop (Go West) = do
-    gs <- get
-    let thePlayer = player gs
-        theBoard = board gs
-    when (canPlayerMoveLeft theBoard thePlayer) $ modify $ \st ->
-        let (newPos, newBoard) = moveLeft (position thePlayer) theBoard
-        in st { board = newBoard, player = thePlayer {position = newPos}}
-    return Continue
-gameLoop (Go East) = do
-    gs <- get
-    let thePlayer = player gs
-        theBoard = board gs
-    when (canPlayerMoveRight theBoard thePlayer) $ modify $ \st ->
-        let (newPos, newBoard) = moveRight (position thePlayer) theBoard
-        in st { board = newBoard, player = thePlayer {position = newPos}}
-    return Continue
+    where actionToDirection North = north
+          actionToDirection South = south
+          actionToDirection West = west
+          actionToDirection East = east
 
 gameLoop (Meta Quit) =
     return GameOver
