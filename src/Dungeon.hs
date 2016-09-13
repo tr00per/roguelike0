@@ -9,19 +9,19 @@ dungeonGenerator :: Coords -> Board
 dungeonGenerator heroPos = matrix maxDungeonHeight maxDungeonWidth filler
     where
         filler (y, x) = if x == getX heroPos && y == getY heroPos
-                        then Hero
-                        else Floor
+                        then [Hero, Floor]
+                        else [Floor]
 
 isWithinMap :: Board -> Coords -> Bool
 isWithinMap currentBoard (Coords x y) = x >= 1 && x <= ncols currentBoard && y >= 1 && y <= nrows currentBoard
 
 move :: CoordsTransform -> Coords -> Board -> (Coords, Board)
-move trans coords b = let yxPair = toYXPair coords
-                          srcValue = uncurry unsafeGet yxPair b
-                          newPos = trans coords
-                      in (newPos, unsafeSet srcValue (toYXPair newPos) $ unsafeSet Floor yxPair b)
-
-
+move trans coords b = let newPos = trans coords
+                          srcYXPair = toYXPair coords
+                          destYSPair = toYXPair newPos
+                          srcValue = uncurry unsafeGet srcYXPair b
+                          destValue = uncurry unsafeGet destYSPair b
+                      in (newPos, unsafeSet (head srcValue:destValue) destYSPair $ unsafeSet (tail srcValue) srcYXPair b)
 
 north, south, west, east :: CoordsTransform
 north coords = coords { getY = getY coords - 1 }

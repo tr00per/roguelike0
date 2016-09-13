@@ -13,8 +13,9 @@ maxDungeonWidth, maxDungeonHeight :: SingleCoord
 maxDungeonWidth = 79
 maxDungeonHeight = 25
 
-type Board = Matrix Piece
-type RenderBoard = [[Piece]]
+type Field = [Piece]
+type Board = Matrix Field
+type RenderBoard = [[Field]]
 
 data Piece = Blank
            | Wall
