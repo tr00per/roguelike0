@@ -4,7 +4,7 @@ module Render
     , Palette
     ) where
 
-import           Board
+import           Model
 import           Data.List  (intercalate)
 import           UI.NCurses (Attribute (..), Color (..), ColorID, Curses,
                              Glyph (..), Update, drawGlyph, newColorID)
@@ -12,7 +12,7 @@ import           UI.NCurses (Attribute (..), Color (..), ColorID, Curses,
 newtype Palette = Palette [ColorID]
 
 render :: Palette -> GameState -> Update ()
-render palette = mapM_ drawGlyph . colorCont . map (map colorPiece) . board
+render palette = mapM_ drawGlyph . colorCont . map (map colorPiece) . forRendering . board
     where colorPiece = renderPiece palette
           colorCont = continuous palette
 
