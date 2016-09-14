@@ -1,16 +1,14 @@
 module Dungeon where
 
 import           Data.Matrix
+import qualified Dungeon.Generator.Empty as Gen
 import           Model
+import           System.Random           (RandomGen)
 
 type CoordsTransform = Coords -> Coords
 
-dungeonGenerator :: Coords -> Board
-dungeonGenerator heroPos = matrix maxDungeonHeight maxDungeonWidth filler
-    where
-        filler (y, x) = if x == getX heroPos && y == getY heroPos
-                        then [Hero, Floor]
-                        else [Floor]
+dungeonGenerator :: RandomGen r => r -> (Coords, Board)
+dungeonGenerator = Gen.newDungeon
 
 isWithinMap :: Board -> Coords -> Bool
 isWithinMap currentBoard (Coords x y) = x >= 1 && x <= ncols currentBoard && y >= 1 && y <= nrows currentBoard

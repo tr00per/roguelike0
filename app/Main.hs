@@ -11,16 +11,20 @@ import           Game                    (GameState, RoundResult (..),
 import           Keymap                  (kmap)
 import           Render                  (Palette, initPalette, render)
 import qualified UI.NCurses              as Curses
+import           System.Random           (getStdGen)
 
 main :: IO ()
 main = runInTerminal
 
 runInTerminal :: IO ()
-runInTerminal = Curses.runCurses $ do
-    _ <- Curses.setCursorMode Curses.CursorInvisible
-    palette <- initPalette
-    (gs, rr) <- runLift $ runReader (runState (initGameLoop "Fenter") runGame) palette
-    endScreen rr gs
+runInTerminal = do
+    random <- getStdGen
+    Curses.runCurses $ do
+        _ <- Curses.setCursorMode Curses.CursorInvisible
+        palette <- initPalette
+        let initialGameState = initGameLoop random "Fenter"
+        (gs, rr) <- runLift $ runReader (runState initialGameState runGame) palette
+        endScreen rr gs
 
 endScreen :: RoundResult -> GameState -> Curses.Curses ()
 endScreen _ _ = do

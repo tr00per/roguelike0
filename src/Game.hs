@@ -14,7 +14,8 @@ import           Dungeon
 import           Model
 import           Control.Eff
 import           Control.Eff.State.Lazy
-import           Control.Monad (when)
+import           Control.Monad          (when)
+import           System.Random          (RandomGen)
 
 newPlayerHealth :: Int
 newPlayerHealth = 10
@@ -22,10 +23,10 @@ newPlayerHealth = 10
 newPlayer :: String -> Coords -> Player
 newPlayer playerName playerPosition = Player playerName newPlayerHealth playerPosition
 
-initGameLoop :: String -> GameState
-initGameLoop playerName =
-    let playerCoords = Coords (maxDungeonWidth `div` 2) (maxDungeonHeight `div` 2) in
-    GameState (dungeonGenerator playerCoords) (newPlayer playerName playerCoords)
+initGameLoop :: RandomGen g => g -> String -> GameState
+initGameLoop gen playerName =
+    let (playerCoords, newDungeon) = dungeonGenerator gen in
+    GameState newDungeon (newPlayer playerName playerCoords)
 
 gameLoop :: Member (State GameState) e => Action -> Eff e RoundResult
 gameLoop (Go dir) = do
