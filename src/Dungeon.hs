@@ -16,10 +16,10 @@ isWithinMap currentBoard (Coords x y) = x >= 1 && x <= ncols currentBoard && y >
 move :: CoordsTransform -> Coords -> Board -> (Coords, Board)
 move trans coords b = let newPos = trans coords
                           srcYXPair = toYXPair coords
-                          destYSPair = toYXPair newPos
+                          destYXPair = toYXPair newPos
                           srcValue = uncurry unsafeGet srcYXPair b
-                          destValue = uncurry unsafeGet destYSPair b
-                      in (newPos, unsafeSet (head srcValue:destValue) destYSPair $ unsafeSet (tail srcValue) srcYXPair b)
+                          destValue = uncurry unsafeGet destYXPair b
+                      in (newPos, unsafeSet (head srcValue:destValue) destYXPair $ unsafeSet (tail srcValue) srcYXPair b)
 
 north, south, west, east :: CoordsTransform
 north coords = coords { getY = getY coords - 1 }
