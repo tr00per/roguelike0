@@ -13,6 +13,9 @@ maxDungeonWidth, maxDungeonHeight :: SingleCoord
 maxDungeonWidth = 79
 maxDungeonHeight = 25
 
+maxDungeonSize :: Coords
+maxDungeonSize = Coords maxDungeonWidth maxDungeonHeight
+
 type Field = [Piece]
 type Board = Matrix Field
 type RenderBoard = [[Field]]

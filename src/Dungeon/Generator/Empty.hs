@@ -4,10 +4,12 @@ import           Data.Matrix
 import           Model
 import           System.Random (RandomGen)
 
-newDungeon :: RandomGen r => r -> (Coords, Board)
-newDungeon _ = (heroPos, matrix maxDungeonHeight maxDungeonWidth filler)
+newDungeon :: RandomGen r => Coords -> r -> (Coords, Board)
+newDungeon bounds _ = (heroPos, matrix maxY maxX filler)
     where
-        heroPos = Coords (maxDungeonWidth `div` 2) (maxDungeonHeight `div` 2)
+        maxX = getX bounds
+        maxY = getY bounds
+        heroPos = Coords (maxX `div` 2) (maxY `div` 2)
         filler (y, x) = if x == getX heroPos && y == getY heroPos
                         then [Hero, Floor]
                         else [Floor]

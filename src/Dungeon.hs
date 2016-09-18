@@ -8,7 +8,7 @@ import           System.Random           (RandomGen)
 type CoordsTransform = Coords -> Coords
 
 dungeonGenerator :: RandomGen r => r -> (Coords, Board)
-dungeonGenerator = Gen.newDungeon
+dungeonGenerator = Gen.newDungeon maxDungeonSize
 
 isWithinMap :: Board -> Coords -> Bool
 isWithinMap currentBoard (Coords x y) = x >= 1 && x <= ncols currentBoard && y >= 1 && y <= nrows currentBoard
