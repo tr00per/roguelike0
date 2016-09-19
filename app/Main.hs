@@ -1,17 +1,18 @@
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE TypeFamilies          #-}
 module Main where
 
 import           Control.Eff
 import           Control.Eff.Lift
 import           Control.Eff.Reader.Lazy
 import           Control.Eff.State.Lazy
-import           Game                    (GameState, RoundResult (..),
-                                          gameLoop, initGameLoop)
-import           Keymap                  (kmap)
-import           Render                  (Palette, initPalette, render)
-import qualified UI.NCurses              as Curses
+import           Roguelike.Game          (GameState, RoundResult (..), gameLoop,
+                                          initGameLoop)
+import           Roguelike.Keymap        (kmap)
+import           Roguelike.Render        (Palette, initPalette, render)
 import           System.Random           (getStdGen)
+import qualified UI.NCurses              as Curses
 
 main :: IO ()
 main = runInTerminal

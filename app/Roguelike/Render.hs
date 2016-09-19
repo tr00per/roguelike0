@@ -1,4 +1,4 @@
-module Render
+module Roguelike.Render
     ( initPalette
     , render
     , Palette
@@ -7,7 +7,7 @@ module Render
 import           Data.List       (intercalate)
 import           Data.Map.Strict ((!))
 import qualified Data.Map.Strict as Map
-import           Model
+import           Roguelike.Model
 import           UI.NCurses      (Attribute (..), Color (..), ColorID, Curses,
                                   Glyph (..), Update, drawGlyph, newColorID)
 

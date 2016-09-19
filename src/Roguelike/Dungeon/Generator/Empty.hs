@@ -1,8 +1,8 @@
-module Dungeon.Generator.Empty where
+module Roguelike.Dungeon.Generator.Empty (newDungeon) where
 
 import           Data.Matrix
-import           Model
-import           System.Random (RandomGen)
+import           Roguelike.Model
+import           System.Random   (RandomGen)
 
 newDungeon :: RandomGen r => Coords -> r -> (Coords, Board)
 newDungeon bounds _ = (heroPos, matrix maxY maxX filler)

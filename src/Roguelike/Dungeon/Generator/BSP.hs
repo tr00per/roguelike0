@@ -1,10 +1,10 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE TypeFamilies #-}
-module Dungeon.Generator.BSP (newDungeon, RNG (..)) where
+module Roguelike.Dungeon.Generator.BSP (newDungeon, RNG (..)) where
 
 import           Control.Eff
 import           Control.Eff.State.Lazy
-import           Model
+import           Roguelike.Model
 import           System.Random
 
 type NewDungeon = (Coords, Board)

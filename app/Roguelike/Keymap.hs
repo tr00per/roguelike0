@@ -1,12 +1,12 @@
-module Keymap
+module Roguelike.Keymap
     ( kmap
 
     -- re-export from Actions
     , Action
     ) where
 
-import           Actions
-import           UI.NCurses (Event (..), Key (..))
+import           Roguelike.Actions
+import           UI.NCurses        (Event (..), Key (..))
 
 kmap :: Event -> Action
 kmap (EventCharacter 'Q') = Meta Quit

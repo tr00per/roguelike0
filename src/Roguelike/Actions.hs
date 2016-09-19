@@ -1,4 +1,4 @@
-module Actions where
+module Roguelike.Actions where
 
 data Action = Meta Control
             | Go Direction

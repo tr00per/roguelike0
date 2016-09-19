@@ -1,6 +1,6 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE RankNTypes #-}
-module Game
+module Roguelike.Game
     ( initGameLoop
     , gameLoop
 
@@ -9,9 +9,9 @@ module Game
     , RoundResult (..)
     ) where
 
-import           Actions
-import           Dungeon
-import           Model
+import           Roguelike.Actions
+import           Roguelike.Dungeon
+import           Roguelike.Model
 import           Control.Eff
 import           Control.Eff.State.Lazy
 import           Control.Monad          (when)

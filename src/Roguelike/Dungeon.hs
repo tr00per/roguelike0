@@ -1,9 +1,9 @@
-module Dungeon where
+module Roguelike.Dungeon where
 
 import           Data.Matrix
-import qualified Dungeon.Generator.Empty as Gen
-import           Model
-import           System.Random           (RandomGen)
+import qualified Roguelike.Dungeon.Generator.Empty as Gen
+import           Roguelike.Model
+import           System.Random                     (RandomGen)
 
 type CoordsTransform = Coords -> Coords
 

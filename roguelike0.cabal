@@ -13,12 +13,12 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Actions
-                     , Dungeon
-                     , Game
-                     , Model
-                     , Dungeon.Generator.BSP
-                     , Dungeon.Generator.Empty
+  exposed-modules:     Roguelike.Actions
+                     , Roguelike.Dungeon
+                     , Roguelike.Game
+                     , Roguelike.Model
+                     , Roguelike.Dungeon.Generator.BSP
+                     , Roguelike.Dungeon.Generator.Empty
   build-depends:       base >= 4.7 && < 5
                      , random
                      , extensible-effects
@@ -29,8 +29,8 @@ library
 executable roguelike0-exe
   hs-source-dirs:      app
   main-is:             Main.hs
-  other-modules:       Keymap
-                     , Render
+  other-modules:       Roguelike.Keymap
+                     , Roguelike.Render
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N -Wall -Werror
   build-depends:       base
                      , containers

@@ -1,4 +1,4 @@
-module Model where
+module Roguelike.Model where
 
 import           Data.Matrix (Matrix (..), toLists)
 
