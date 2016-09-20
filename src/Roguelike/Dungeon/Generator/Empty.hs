@@ -2,9 +2,9 @@ module Roguelike.Dungeon.Generator.Empty (newDungeon) where
 
 import           Data.Matrix
 import           Roguelike.Model
-import           System.Random   (RandomGen)
+import           Roguelike.Random
 
-newDungeon :: RandomGen r => Coords -> r -> (Coords, Board)
+newDungeon :: Coords -> RNG -> (Coords, Board)
 newDungeon bounds _ = (heroPos, matrix maxY maxX filler)
     where
         maxX = getX bounds

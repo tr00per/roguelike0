@@ -1,5 +1,6 @@
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE RankNTypes            #-}
 module Roguelike.Game
     ( initGameLoop
     , gameLoop
@@ -9,13 +10,13 @@ module Roguelike.Game
     , RoundResult (..)
     ) where
 
-import           Roguelike.Actions
-import           Roguelike.Dungeon
-import           Roguelike.Model
 import           Control.Eff
 import           Control.Eff.State.Lazy
 import           Control.Monad          (when)
-import           System.Random          (RandomGen)
+import           Roguelike.Actions
+import           Roguelike.Dungeon
+import           Roguelike.Model
+import           Roguelike.Random       (RNG)
 
 newPlayerHealth :: Int
 newPlayerHealth = 10
@@ -23,9 +24,9 @@ newPlayerHealth = 10
 newPlayer :: String -> Coords -> Player
 newPlayer playerName playerPosition = Player playerName newPlayerHealth playerPosition
 
-initGameLoop :: RandomGen g => g -> String -> GameState
-initGameLoop gen playerName =
-    let (playerCoords, newDungeon) = dungeonGenerator gen in
+initGameLoop :: RNG -> String -> GameState
+initGameLoop rng playerName =
+    let (playerCoords, newDungeon) = dungeonGenerator rng in
     GameState newDungeon (newPlayer playerName playerCoords)
 
 gameLoop :: Member (State GameState) e => Action -> Eff e RoundResult

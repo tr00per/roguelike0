@@ -10,8 +10,8 @@ import           Control.Eff.State.Lazy
 import           Roguelike.Game          (GameState, RoundResult (..), gameLoop,
                                           initGameLoop)
 import           Roguelike.Keymap        (kmap)
+import           Roguelike.Random        (mkRNG)
 import           Roguelike.Render        (Palette, initPalette, render)
-import           System.Random           (getStdGen)
 import qualified UI.NCurses              as Curses
 
 main :: IO ()
@@ -19,11 +19,11 @@ main = runInTerminal
 
 runInTerminal :: IO ()
 runInTerminal = do
-    random <- getStdGen
+    rng <- mkRNG
     Curses.runCurses $ do
         _ <- Curses.setCursorMode Curses.CursorInvisible
         palette <- initPalette
-        let initialGameState = initGameLoop random "Fenter"
+        let initialGameState = initGameLoop rng "Fenter"
         (gs, rr) <- runLift $ runReader (runState initialGameState runGame) palette
         endScreen rr gs
 

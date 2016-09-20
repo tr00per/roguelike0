@@ -3,11 +3,11 @@ module Roguelike.Dungeon where
 import           Data.Matrix
 import qualified Roguelike.Dungeon.Generator.Empty as Gen
 import           Roguelike.Model
-import           System.Random                     (RandomGen)
+import           Roguelike.Random                (RNG)
 
 type CoordsTransform = Coords -> Coords
 
-dungeonGenerator :: RandomGen r => r -> (Coords, Board)
+dungeonGenerator :: RNG -> (Coords, Board)
 dungeonGenerator = Gen.newDungeon maxDungeonSize
 
 isWithinMap :: Board -> Coords -> Bool
