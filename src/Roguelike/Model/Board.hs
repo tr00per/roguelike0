@@ -1,4 +1,8 @@
-module Roguelike.Model.Board where
+module Roguelike.Model.Board
+    ( Board
+    , GameBoard (..)
+    , moveTop
+    ) where
 
 import           Control.Monad.ST     (ST, runST)
 import qualified Data.Matrix          as MI
@@ -14,6 +18,11 @@ class GameBoard g where
     boardMin, boardMax :: g -> Coords
     isWithinBoard :: g -> Coords -> Bool
 
+type YXPair = (SingleCoord, SingleCoord)
+
+toYXPair :: Coords -> YXPair
+toYXPair (Coords x y) = (y, x)
+
 instance GameBoard Board where
     mkBoard bounds filling = Board $ MI.matrix (getX bounds) filling
     forRendering (Board b) = MI.toLists b
@@ -24,9 +33,6 @@ instance GameBoard Board where
                                        maxX = getX $ boardMax b
                                        maxY = getY $ boardMax b
         in x >= minX && x < maxX && y >= minY && y < maxY
-
-toYXPair :: Coords -> YXPair
-toYXPair (Coords x y) = (y, x)
 
 mutateTop :: YXPair -> YXPair -> MI.Matrix Field -> ST a (MI.Matrix Field)
 mutateTop src dest b = do

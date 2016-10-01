@@ -30,4 +30,3 @@ maxDungeonSize = Coords maxDungeonWidth maxDungeonHeight
 
 type Field = [Piece]
 type RenderBoard = [[Field]]
-type YXPair = (SingleCoord, SingleCoord)
