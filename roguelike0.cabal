@@ -17,6 +17,8 @@ library
                      , Roguelike.Dungeon
                      , Roguelike.Game
                      , Roguelike.Model
+                     , Roguelike.Model.Defs
+                     , Roguelike.Model.Board
                      , Roguelike.Dungeon.Generator.BSP
                      , Roguelike.Dungeon.Generator.Empty
                      , Roguelike.Random
