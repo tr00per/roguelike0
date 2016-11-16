@@ -9,6 +9,12 @@ import           Roguelike.Random
 
 type NewDungeon = (Coords, Board)
 
+data BSP = Leaf SingleCoord SingleCoord SingleCoord SingleCoord
+         | Split BSP BSP
+
+split :: (Member (State RNG) e) =>  BSP -> Eff e BSP
+split = undefined
+
 newDungeon :: Coords -> RNG -> NewDungeon
 newDungeon bounds rng = run $ evalState rng (generator maxX maxY)
     where
