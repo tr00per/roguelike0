@@ -1,6 +1,6 @@
 module Roguelike.Dungeon where
 
-import qualified Roguelike.Dungeon.Generator.Empty as Gen
+import qualified Roguelike.Dungeon.Generator.BSP as Gen
 import           Roguelike.Model
 import           Roguelike.Random                  (RNG)
 
