@@ -27,7 +27,7 @@ newDungeon bounds rng = run $ evalState rng (generator maxX maxY)
         maxY = getY bounds
 
 generator :: (Member (State RNG) e) => SingleCoord -> SingleCoord -> Eff e NewDungeon
-generator maxX maxY = createTree maxX maxY >>= addCorridors >>= toNewDungeon
+generator maxX maxY = createTree maxX maxY >>= addCorridors >>= toNewDungeon maxX maxY
 
 split :: (Member (State RNG) e) =>  BSP -> Eff e BSP
 split leaf @ Leaf {} = do
@@ -57,5 +57,16 @@ createTree maxX maxY = split (Leaf 0 maxX 0 maxY)
 addCorridors :: BSP -> Eff e BSP
 addCorridors = return
 
-toNewDungeon :: BSP -> Eff e NewDungeon
-toNewDungeon = undefined
+toNewDungeon :: SingleCoord -> SingleCoord -> BSP -> Eff e NewDungeon
+toNewDungeon maxX maxY bsp = do
+    let rooms = toRooms bsp
+        walls = concatMap toWalls rooms
+        emptyBoard = mkBoard (Coords maxX maxY) [[Floor]]
+        start = Coords 1 1
+    return (start, populateFields Wall walls emptyBoard)
+
+toRooms :: BSP -> [BSP]
+toRooms = undefined
+
+toWalls :: BSP -> [Coords]
+toWalls = undefined

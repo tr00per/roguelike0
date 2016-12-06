@@ -1,7 +1,6 @@
 module Roguelike.Model.Board
     ( Board
     , GameBoard (..)
-    , moveTop
     ) where
 
 import           Control.Monad.ST     (ST, runST)
@@ -14,9 +13,11 @@ newtype Board = Board (MI.Matrix Field)
 
 class GameBoard g where
     mkBoard :: Coords -> [Field] -> g
+    populateFields :: Piece -> [Coords] -> g -> g
     forRendering :: g -> RenderBoard
     boardMin, boardMax :: g -> Coords
     isWithinBoard :: g -> Coords -> Bool
+    moveTop :: Coords -> Coords -> g -> g
 
 type YXPair = (SingleCoord, SingleCoord)
 
@@ -25,6 +26,7 @@ toYXPair (Coords x y) = (y, x)
 
 instance GameBoard Board where
     mkBoard bounds filling = Board $ MI.matrix (getX bounds) filling
+    populateFields = undefined
     forRendering (Board b) = MI.toLists b
     boardMin _ = Coords 0 0
     boardMax (Board b) = Coords (MI.cols b) (MI.rows b)
@@ -34,18 +36,17 @@ instance GameBoard Board where
                                        maxY = getY $ boardMax b
         in x >= minX && x < maxX && y >= minY && y < maxY
 
-mutateTop :: YXPair -> YXPair -> MI.Matrix Field -> ST a (MI.Matrix Field)
-mutateTop src dest b = do
+    moveTop oldPos newPos (Board b) =
+        let srcYXPair = toYXPair oldPos
+            destYXPair = toYXPair newPos
+            b' = runST $ swapTop srcYXPair destYXPair b
+        in Board b'
+
+swapTop :: YXPair -> YXPair -> MI.Matrix Field -> ST a (MI.Matrix Field)
+swapTop src dest b = do
     mb <- MI.thaw b
     (this:rest) <- MM.unsafeRead mb src
     MM.unsafeWrite mb src rest
     others <- MM.unsafeRead mb dest
     MM.unsafeWrite mb dest (this:others)
     MI.unsafeFreeze mb
-
-moveTop :: Coords -> Coords -> Board -> Board
-moveTop oldPos newPos (Board b) =
-    let srcYXPair = toYXPair oldPos
-        destYXPair = toYXPair newPos
-        b' = runST $ mutateTop srcYXPair destYXPair b
-    in Board b'
