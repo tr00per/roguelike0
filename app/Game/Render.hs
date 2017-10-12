@@ -1,4 +1,4 @@
-module Roguelike.Render
+module Game.Render
     ( initPalette
     , render
     , Palette

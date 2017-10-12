@@ -1,0 +1,37 @@
+name:        roguelike0
+version:     0.1.0.0
+synopsis:    My attempt at the roguelike genre.
+description: Please see README.md
+homepage:    https://github.com/tr00per/roguelike0.git
+license:     BSD2
+author:      Artur Czajka
+copyright:   Artur Czajka <arturczajka@gmail.com>
+category:    Game
+
+dependencies:
+  - base
+  - containers
+  - extensible-effects
+
+library:
+  exposed-modules:
+      - Roguelike.Game
+      - Roguelike.Random
+      - Roguelike.Actions
+      - Roguelike.Model
+  source-dirs: src
+  dependencies:
+      - random
+      - vector
+      - matrices
+
+executables:
+  roguelike0:
+      source-dirs: app
+      main: Main.hs
+      other-modules:
+          - Game.Keymap
+          - Game.Render
+      dependencies:
+          - roguelike0
+          - ncurses

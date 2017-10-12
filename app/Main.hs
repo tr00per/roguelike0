@@ -7,11 +7,11 @@ import           Control.Eff
 import           Control.Eff.Lift
 import           Control.Eff.Reader.Lazy
 import           Control.Eff.State.Lazy
+import           Game.Keymap             (kmap)
+import           Game.Render             (Palette, initPalette, render)
 import           Roguelike.Game          (GameState, RoundResult (..), gameLoop,
                                           initGameLoop)
-import           Roguelike.Keymap        (kmap)
 import           Roguelike.Random        (mkRNG)
-import           Roguelike.Render        (Palette, initPalette, render)
 import qualified UI.NCurses              as Curses
 
 main :: IO ()
@@ -39,9 +39,9 @@ endScreen _ _ = do
         waitForAnyKey w = do
             ev <- Curses.getEvent w Nothing
             case ev of
-                (Just (Curses.EventCharacter _)) -> return ()
+                (Just (Curses.EventCharacter _))  -> return ()
                 (Just (Curses.EventSpecialKey _)) -> return ()
-                _ -> waitForAnyKey w
+                _                                 -> waitForAnyKey w
 
 runGame :: (SetMember Lift (Lift Curses.Curses) e, Member (State GameState) e, Member (Reader Palette) e) =>
     Eff e RoundResult
