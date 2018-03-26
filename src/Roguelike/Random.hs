@@ -12,7 +12,7 @@ import           System.Random          (StdGen, getStdGen, random, randomR)
 newtype RNG = RNG StdGen
 
 mkRNG :: IO RNG
-mkRNG = RNG <$> getStdGen
+mkRNG = RNG <$> getStdGen -- newStdGen
 
 roll :: (Member (State RNG) e) => Eff e SingleCoord
 roll = do

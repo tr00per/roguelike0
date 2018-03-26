@@ -3,6 +3,7 @@ module Roguelike.Model.Board
     , GameBoard (..)
     ) where
 
+import           Control.Monad        (forM_)
 import           Control.Monad.ST     (ST, runST)
 import qualified Data.Matrix          as MI
 import qualified Data.Matrix.Mutable  as MM
@@ -26,10 +27,17 @@ toYXPair (Coords x y) = (y, x)
 
 instance GameBoard Board where
     mkBoard bounds filling = Board $ MI.matrix (getX bounds) filling
-    populateFields = undefined
+
+    populateFields what coords (Board b) =
+        let yxPairs = map toYXPair coords
+        in Board $ runST $ putTop what yxPairs b
+
     forRendering (Board b) = MI.toLists b
+
     boardMin _ = Coords 0 0
+
     boardMax (Board b) = Coords (MI.cols b) (MI.rows b)
+
     isWithinBoard b (Coords x y) = let minX = getX $ boardMin b
                                        minY = getY $ boardMin b
                                        maxX = getX $ boardMax b
@@ -41,6 +49,14 @@ instance GameBoard Board where
             destYXPair = toYXPair newPos
             b' = runST $ swapTop srcYXPair destYXPair b
         in Board b'
+
+putTop :: Piece -> [YXPair] -> MI.Matrix Field -> ST a (MI.Matrix Field)
+putTop what dests b = do
+    mb <- MI.thaw b
+    forM_ dests $ \yx -> do
+        stack <- MM.unsafeRead mb yx
+        MM.unsafeWrite mb yx (what:stack)
+    MI.unsafeFreeze mb
 
 swapTop :: YXPair -> YXPair -> MI.Matrix Field -> ST a (MI.Matrix Field)
 swapTop src dest b = do

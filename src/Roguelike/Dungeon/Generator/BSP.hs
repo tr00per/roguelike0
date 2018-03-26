@@ -1,5 +1,6 @@
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE TypeFamilies          #-}
 module Roguelike.Dungeon.Generator.BSP (newDungeon) where
 
 import           Control.Eff
@@ -61,12 +62,19 @@ toNewDungeon :: SingleCoord -> SingleCoord -> BSP -> Eff e NewDungeon
 toNewDungeon maxX maxY bsp = do
     let rooms = toRooms bsp
         walls = concatMap toWalls rooms
-        emptyBoard = mkBoard (Coords maxX maxY) [[Floor]]
-        start = Coords 1 1
-    return (start, populateFields Wall walls emptyBoard)
+        heroPos = Coords 1 1
+        withFloor = emptyBoard maxX maxY
+        withWalls = populateFields Wall walls withFloor
+        withHero = populateFields Hero [heroPos] withWalls
+    return (heroPos, withHero)
+
+emptyBoard :: SingleCoord -> SingleCoord -> Board
+emptyBoard maxX maxY = mkBoard (Coords maxX maxY) [[Floor] | y <- [0..maxY-1], x <- [0..maxX-1]]
 
 toRooms :: BSP -> [BSP]
-toRooms = undefined
+toRooms leaf @ Leaf{}           = [leaf]
+toRooms (Split branch0 branch1) = toRooms branch0 ++ toRooms branch1
 
 toWalls :: BSP -> [Coords]
-toWalls = undefined
+toWalls leaf @ Leaf{}           = [Coords (x0 leaf) (y0 leaf), Coords (x1 leaf) (y1 leaf)]
+toWalls (Split branch0 branch1) = toWalls branch0 ++ toWalls branch1
