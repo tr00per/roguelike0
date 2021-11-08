@@ -1,10 +1,12 @@
-{-# LANGUAGE FlexibleContexts      #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE TypeFamilies          #-}
+-- {-# LANGUAGE FlexibleContexts      #-}
+-- {-# LANGUAGE MultiParamTypeClasses #-}
+-- {-# LANGUAGE TypeFamilies          #-}
+{-# LANGUAGE FlexibleContexts    #-}
+-- {-# LANGUAGE MonoLocalBinds      #-}
+-- {-# LANGUAGE ScopedTypeVariables #-}
 module Main where
 
 import           Control.Eff
-import           Control.Eff.Lift
 import           Control.Eff.Reader.Lazy
 import           Control.Eff.State.Lazy
 import           Game.Keymap             (kmap)
@@ -43,8 +45,10 @@ endScreen _ _ = do
                 (Just (Curses.EventSpecialKey _)) -> return ()
                 _                                 -> waitForAnyKey w
 
-runGame :: (SetMember Lift (Lift Curses.Curses) e, Member (State GameState) e, Member (Reader Palette) e) =>
-    Eff e RoundResult
+runGame :: ( SetMember Lift (Lift Curses.Curses) e
+           , Member (State GameState) e
+           , Member (Reader Palette) e
+           ) => Eff e RoundResult
 runGame = do
     w <- lift Curses.defaultWindow
     palette <- ask

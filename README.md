@@ -4,7 +4,7 @@ Features (planned):
 - [x] integration with ncurses
 - [x] moving around
 - [ ] generated dungeon
-- [ ] moving around withing the dungeon
+- [ ] moving around within the dungeon
 - [ ] advancing to the next level
 - [ ] save/load game
 - [ ] static enemies
