@@ -1,9 +1,6 @@
--- {-# LANGUAGE FlexibleContexts      #-}
--- {-# LANGUAGE MultiParamTypeClasses #-}
--- {-# LANGUAGE TypeFamilies          #-}
 {-# LANGUAGE FlexibleContexts    #-}
--- {-# LANGUAGE MonoLocalBinds      #-}
--- {-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE MonoLocalBinds      #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 module Main where
 
 import           Control.Eff
@@ -26,7 +23,7 @@ runInTerminal = do
         _ <- Curses.setCursorMode Curses.CursorInvisible
         palette <- initPalette
         let initialGameState = initGameLoop rng "Fenter"
-        (gs, rr) <- runLift $ runReader (runState initialGameState runGame) palette
+        (rr, gs) <- runLift . runReader palette . runState initialGameState $ runGame
         endScreen rr gs
 
 endScreen :: RoundResult -> GameState -> Curses.Curses ()
@@ -45,7 +42,7 @@ endScreen _ _ = do
                 (Just (Curses.EventSpecialKey _)) -> return ()
                 _                                 -> waitForAnyKey w
 
-runGame :: ( SetMember Lift (Lift Curses.Curses) e
+runGame :: ( Lifted Curses.Curses e
            , Member (State GameState) e
            , Member (Reader Palette) e
            ) => Eff e RoundResult
@@ -57,10 +54,10 @@ runGame = do
         Curses.clear
         render palette gameState
     lift Curses.render
-    (Just ev) <- lift $ Curses.getEvent w Nothing
+    ev <- lift $ Curses.getEvent w Nothing
     next ev gameLoop
     where
-        next Curses.EventResized _ =
+        next (Just Curses.EventResized) _ =
             runGame
         next ev step = do
             roundResult <- step (kmap ev)
